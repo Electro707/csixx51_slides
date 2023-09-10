@@ -1,4 +1,4 @@
-# Intro To Python Cource Slides
+# Intro To Python Course Slides
 These are the slides for the CSIxx51 Into To Python course I teach at the University of New Haven
 
 # License
