@@ -1,0 +1,8 @@
+*.log
+*.toc
+*.snm
+*.out
+*.pdf
+*.aux
+*.nav
+_minted*/

@@ -1,0 +1,122 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle, numbering=fraction, background=dark]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{hyperref}
+\usepackage{multimedia}
+
+\usepackage{enumerate}
+\usepackage[skip=2pt]{caption}
+
+\usepackage{multimedia}
+\usepackage{minted}
+
+\input{common.tex}
+
+\title{Lecture \#1: Where it starts!}
+\author{By Jamal Bouajjaj}
+\date{\today}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[standout]{First Slide}
+  Welcome to Script Programming/Python
+\end{frame}
+
+\section{Syllabus}
+
+\begin{frame}{The Syllabus}
+    Placeholder
+\end{frame}
+
+\section{Installation}
+
+\section{Intro to Python}
+\begin{frame}{What is it?}
+    Python is a dynamially-typed, high-level, intepreted, script-able language
+\end{frame}
+
+\begin{frame}{High-Level}
+    Python does a lot of heavy lifting for you!
+
+    Memory managment for example is not heard of in Python-land, it allocates the memory it needs for you and collects your garbage.
+
+    Generally, it's easier to do tasks in Python in C/C++ for example.
+
+    All this goodness has a sacrifice: speed.
+\end{frame}
+
+\begin{frame}{Intepreted?}
+    Running a Python line does not require what is before it to be compiled down.
+
+    Sort of just runs the application. Exectues your application line by line as it comes.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Intepreted Caveat}
+    Because Python is intepreted and dynamially typed, it will not check some errors ahead of time like undeclared variables
+
+    \begin{minted}[breaklines=true,frame=single]{python}
+x = input("Please don't type 0 ")
+if x == "0":
+    fprint("How could you")
+else:
+    print("Yeah, we're happy!")
+    \end{minted}
+
+    Python must understand what it's given, but it makes no assumption of previous declarations.
+\end{frame}
+
+\begin{frame}{Implementation}
+    Just like C, Python is a language specification. Like the different compilers, there are different Python intepreters.
+
+    The most popular and widely used, CPython, is the one that you just downloaded. It's what people just refer to as "Python". It's also the reference implementation.
+
+    There are several other intepreters, some of which are:
+    \begin{itemize}
+        \item Jython: A Java implementation with nice integration with Java bytecode
+        \item PyPy: Implementation that uses a Just-In-Time compiler similar to Java, is faster
+        \item RustPython: A Rust implementation
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Syntax}
+    We'll learn as we go along for the most part, but there are a couple of things I would like to note:
+    \begin{itemize}
+        \item It enforces whitespace indentation, so indenting is required. No more cursed one-lined obfuscated JS
+        \item The whitespace can be space or tabs, but must be consistent
+        \item The recommended is 4 spaces
+        \item While the intepreter doesn't force you, there is a consensus on naming convensions (PEP 8). I personally will follow PEP 8
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Variable Types}
+    There are some variable types, some of which we'll cover later in the course. Here are some basic ones:
+    \begin{itemize}
+        \item integers
+        \item boolean: True or False
+        \item floating point numbers
+        \item complex numbers: yes Python has native support for those
+        \item strings
+        \item lists
+        \item etc (not a type)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}

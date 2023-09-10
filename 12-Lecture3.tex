@@ -1,0 +1,156 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle, numbering=fraction, background=dark]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{hyperref}
+\usepackage{multimedia}
+% \usepackage{media9}
+
+\usepackage{enumerate}
+\usepackage[skip=2pt]{caption}
+
+\usepackage{multimedia}
+\usepackage{minted}
+
+\input{common.tex}
+
+\title{Lecture \#3}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+\begin{document}
+
+\maketitle
+
+\section{For Loops}
+\begin{frame}[containsverbatim]{The Loop}
+    The for loop can be used to itterate over something, such as a list
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = [2, 4, 6, 7, 7, 9]
+for i in a:
+    print(a)
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Over a Generator}
+    The for loop can also itterate over a generator (more on that later)
+    \begin{minted}[breaklines=true,frame=single]{python}
+for i in range(20):
+    print(a)
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Dictionary}
+    The for loop can itterate over a dictionary, returning it's keys
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = {'resistor': 1e3, 'tollerance': 0.05, 'power': 0.125}
+for i in a:
+    print(a)
+    \end{minted}
+\end{frame}
+
+\section{Exceptions}
+\begin{frame}[containsverbatim]{Errors}
+    An Exception is raised whenever Python see an issue
+
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = 5 / 0       # Forbidden fruit
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Rasing them}
+    Exceptions can also be raised
+
+    \begin{minted}[breaklines=true,frame=single]{python}
+raise UserWarning("Haha very funny!")
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Exceptions List}
+    The list of default exceptions can be found at \url{https://docs.python.org/3/library/exceptions.html}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Handling them}
+    Exceptions needs to handled, or else your program will crash!
+
+    This is done with the following block
+
+    \begin{minted}[breaklines=true,frame=single]{python}
+x = input("What to divide by (please no 0): ")
+x = int(x)
+try:
+    a = 5 / x
+except ZeroDivisionError:
+    print("How could you!")
+else:
+    print(f"Good, result is {a}")
+finally:
+    print("Done!")
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Exception-seption}
+    There can also be exceptions inside exceptions. Exception-seption
+
+    \begin{minted}[breaklines=true,frame=single]{python}
+x = input("What to divide by (please no 0): ")
+x = int(x)
+try:
+    a = 5 / x
+except ZeroDivisionError:
+    print("How could you! Screw you then!")
+    a = int("what?")
+else:
+    print(f"Good, result is {a}")
+finally:
+    print("Done!")
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Catching Them All!}
+    Multiple Exceptions can be handled with the same except block, by using a Tupple
+
+    \begin{minted}[breaklines=true,frame=single]{python}
+x = input("What to divide by (please no 0): ")
+try:
+    x = int(x)
+    a = 5 / x
+# Catch both a ZeroDivisionError and ValueError the same way!
+except (ZeroDivisionError, ValueError):
+    print("How could you!")
+else:
+    print(f"Good, result is {a}")
+finally:
+    print("Done!")
+    \end{minted}
+\end{frame}
+
+\begin{frame}{Good Practices}
+    There are a couple of good practice while handling exceptions
+    \begin{itemize}
+        \item Have them, please.
+        \item Add them around most things, especially where there can be known exceptions
+        \item Don't generalize: Specify the exception
+        \item ...Except around your main application as a safety check
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}

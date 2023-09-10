@@ -1,0 +1,176 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle, numbering=fraction, background=dark]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{hyperref}
+\usepackage{multimedia}
+% \usepackage{media9}
+
+\usepackage{enumerate}
+\usepackage[skip=2pt]{caption}
+
+\usepackage{multimedia}
+\usepackage{minted}
+
+\input{common.tex}
+
+\title{Lecture \#2}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+\begin{document}
+
+\maketitle
+
+\section{Functions}
+\begin{frame}[containsverbatim]{Functions}
+    Python functions are just like any other programming language's functions. The following is the general syntax:
+
+    \begin{minted}[breaklines=true,frame=single]{text}
+def iamafunction(INPUT):
+    something
+    return OUTPUT
+    \end{minted}
+\end{frame}
+
+\begin{frame}{Arugments}
+    Arguments are optional. There can be multiple
+\end{frame}
+
+\begin{frame}{Returns}
+    Returns are also optional. There can also be multiple things returned, returning as a tuple
+\end{frame}
+
+\section{Mutable vs Immutable}
+\begin{frame}[containsverbatim]{What?}
+    A Immutable variable is one that can cannot change it's value after creation, while a multable variable is one that can
+\end{frame}
+
+\begin{frame}[containsverbatim]{Examples}
+    I will show some examples. To know if one is multable or not by re-assignment, one can check it's ID
+\end{frame}
+
+\section{Sequences}
+
+\begin{frame}[containsverbatim]{List}
+    A sequences is a positionally ordered collection of items. For example, a list:
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = [2, 5, 7, 3, 6, 8, 6]
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Tuple}
+    A tuples is a immutable listm, i.e cannot be changed after it's creation
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = (2, 5, 7, 3, 6, 8, 6)
+# This should throw an error
+a[2] = 34
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Sets}
+    A set an un-orderd list that is immutable
+
+    It is the least used type
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = {2, 5, 7, 3, 6, 8, 6}
+b = {5, 2}
+# This should throw an error
+print(a[5])
+print(a-b)
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Strings}
+    A string is also a sequence by itself
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = "Hello World!"
+print(a[2])
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Bytearray}
+    A binary list
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = bytearray([234, 12, 34, 65])
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Sequence Operations}
+    There are a couple of methods one can do with sequences, such as (shown on screen)
+\end{frame}
+
+\begin{frame}[containsverbatim]{Sequence Indexing}
+    One can index a Python list with \mintinline{python}{[START:END]}. You can also have negatives
+\end{frame}
+
+\section{Dictionaries}
+
+\begin{frame}[containsverbatim]{What?}
+    A variable to map keys to values. Think of it as a list but you choose the index
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = {'resistor': 1E3, 'tollerance': '+-yes'}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{No Duplicates}
+    A dictionary cannot have the same key
+    \begin{minted}[breaklines=true,frame=single]{python}
+# This cause the first `number` key set to be ignored
+a = {'number': 1E3, 'number': 34, 'fruit': 'banana'}
+    \end{minted}
+\end{frame}
+
+\section{Input}
+
+\begin{frame}[containsverbatim]{Input}
+    The input function allows you to type text into your application
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = input("Please enter something :) ")
+    \end{minted}
+\end{frame}
+
+\section{String Formatting}
+\begin{frame}[containsverbatim]{Variables in Strings?}
+    Python strings can be formatted to add text, similar to printf
+    \begin{minted}[breaklines=true,frame=single]{python}
+a = 123
+# The following are all the same, from least to most preferable
+print("This is a number %s" % a)
+print("This is a number {:d}".format(a))
+print(f"This is a number {a:d}")       # Since Python 3.6
+    \end{minted}
+\end{frame}
+
+\section{Formatting List}
+\begin{frame}[containsverbatim]{Available Formatting}
+    The format can be found in the docs, but here are a couple
+    \begin{minted}[breaklines=true,frame=single]{python}
+print(f"Numbers: {123:d}")
+print(f"Numbers: {123:05d}")
+print(f"Numbers: {123:x}")
+print(f"Numbers: {123.0:.2f}")
+print(f"Numbers: {0.0000000000562:g}")
+print(f"Numbers: {"Text!":s}")
+    \end{minted}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}

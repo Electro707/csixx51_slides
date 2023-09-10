@@ -1,0 +1,162 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle, numbering=fraction, background=dark]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{hyperref}
+\usepackage{multimedia}
+% \usepackage{media9}
+
+\usepackage{enumerate}
+\usepackage[skip=2pt]{caption}
+
+\usepackage{multimedia}
+\usepackage{minted}
+
+\input{common.tex}
+
+\title{Lecture \#5: Generators, Comprehensions, and More!}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\section{Itterable}
+
+\begin{frame}{Python Iterable}
+  An iterable is an object that can be iterated over, either manully or with the for loop (and other methods like list compression).
+
+  For example, lists are iterable.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Iterable}
+  On a technical level, an iterable must return an iterator object with \mintinline{python}{__iter__()} or \mintinline{python}{__getitem__()}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Iterator}
+  An iterator is an object with the \mintinline{python}{__next__()} method, which returns the next item in the iterator.
+
+  An iterator raises the StopIteration exception when there is nothing next if the next function is called to it.
+\end{frame}
+
+\section{Generators}
+
+\begin{frame}{Generators}
+  An generator is an iterator that YOU can create. Every generator is an iterator, but not every iterator is a generator.
+
+  See PEP 255 for more details.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Generator Function}
+  To make a function an iterator, you need the yield keyword. It simply returns a value when the function gets called, and "resumes" when \mintinline{python}{next()} is called on the iterator. Yield rememeber's the function state unlike return. This happens until the end of a function
+
+  To force exit (i.e raise a StopIteration exception), simply exit out of the function.
+  \begin{minted}[breaklines=true,frame=single]{python}
+# from https://wiki.python.org/moin/Generators
+def firstn(n):
+    num = 0
+    while num < n:
+        yield num
+        num += 1
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Usage}
+  A generator is useful if you know the objects will be sequentially grabbed, and storing them all will be too much memory.
+
+  An example is a database query.
+\end{frame}
+
+\begin{frame}{range?}
+  Is \textit{range} a generator or not?\pause
+
+  NO, it isn't (suprisinly). It's actually it's own type, and is considered a sequence.
+\end{frame}
+
+\section{Comprehensions}
+\begin{frame}[containsverbatim]{List Comprehensions}
+  You can generate a Python list in one line with the following format \verb|[ <expression> for item in list if <conditional> ]|
+
+  \begin{minted}[breaklines=true,frame=single]{python}
+a = [i for i in range(5)]
+a = [i*5 for i in range(5) if i != 2]
+a = [i+5 for i in a]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Set Comprehensions}
+  Sets also have compression!
+
+\begin{minted}[breaklines=true,frame=single]{python}
+a = {i for i in range(5)}
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Dictionary Comprehensions}
+  Same applies to a dictionary
+
+\begin{minted}[breaklines=true,frame=single]{python}
+a = {f"F{i:d}": i*5 for i in range(5)}
+\end{minted}
+\end{frame}
+
+\section{And More!}
+
+\begin{frame}{Useful Itterable Functions}
+  The next slides will go over two useful itterable functions
+\end{frame}
+
+\begin{frame}[containsverbatim]{map}
+\mintinline{python}{map(function, iterable, *iterables)}
+
+Return an iterator that applies function to every item of iterable, yielding the results. If additional iterables arguments are passed, function must take that many arguments and is applied to the items from all iterables in parallel. With multiple iterables, the iterator stops when the shortest iterable is exhausted. For cases where the function inputs are already arranged into argument tuples, see itertools.starmap().
+\end{frame}
+
+\begin{frame}[containsverbatim]{map, example}
+  \begin{minted}[breaklines=true,frame=single]{python}
+def f(a):
+  return 2**a
+
+b = map(f, range(10))
+for i in b:
+  print(i)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{zip}
+\mintinline{python}{zip(*iterables, strict=False)}
+
+Iterate over several iterables in parallel, producing tuples with an item from each one.
+\end{frame}
+
+\begin{frame}[containsverbatim]{zip, example}
+  \begin{minted}[breaklines=true,frame=single]{python}
+for item in zip([1, 2, 3], ['sugar', 'spice', 'everything nice']):
+    print(item)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}
