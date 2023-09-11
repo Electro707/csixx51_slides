@@ -1,0 +1,119 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\title{Lecture \#7: Modules}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\section{Modules}
+
+\begin{frame}{Expanding Python}
+  While the built-in Python functions and what you can do might be fine for some applications, what if you want to expand the functionality of you application?
+
+  For example, what if you need to get the factorial of a number? Sure, you can make a function, but does it already exist?
+\end{frame}
+
+\begin{frame}{Modules}
+  The answer is with Modules. Modules are python files or packages than can be imported into your application.
+
+  A Package is just a collection of modules. All packages are modules, not all modules are packages.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Importing}
+  Say you have a two python files: \verb|main.py| and \verb|config.py|. From main, you can import config with the import statement:
+
+  \begin{minted}[breaklines=true,frame=single]{python}
+import config
+  \end{minted}
+
+  \verb|config| is now imported as an object containing all functions, classes, and variables from \verb|config.py|
+\end{frame}
+
+\begin{frame}[containsverbatim]{Import statement}
+  The full syntax for import is \mintinline{python}{import MODULE as NAME} or \mintinline{python}{from MODULE import IDENTIFIER as NAME}.
+
+  \verb|from| is used if you want to import something from a module, for example \mintinline{python}{from random import randint}.
+
+  The usage of \verb|as| is optional, and simply renames what you import, for example \mintinline{python}{import numpy as np}.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Import ALL}
+  From a module, you can import so that every namespace is directly available in your application, for example
+
+  \begin{minted}[breaklines=true,frame=single]{python}
+from math import *
+print(pi)   # Is now in our local namespace
+  \end{minted}
+
+  % lol, from https://stackoverflow.com/questions/2360724/what-exactly-does-import-import
+  This is generally not the best idea for multiple reasons: Namespace collision and inefficient for big packages.
+
+  Generally, it is better to explicitly import what you need, in the case above
+    \begin{minted}[breaklines=true,frame=single]{python}
+from math import pi
+print(pi)   # Is now in our local namespace..again
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Import search}
+  The import function searches the following places for modules:
+  \begin{itemize}
+    \item The current directory
+    \item sys.path
+  \end{itemize}
+
+  sys.path is initialized automatically by Python, and has the following directories added (as over simplification):
+  \begin{itemize}
+    \item Everything in the PYTHONPATH environment variable, if it exists
+    \item Standard modules that comes with Python
+    \item Site packages
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Standard Modules}
+  Python has a LOT of standard modules that it comes with.
+
+  They can be found in \url{https://docs.python.org/3/library/index.html}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Site Packages}
+  You can download external modules and install them into your site packages directory.
+
+  This process is done with a built-in tool called \verb|pip|.
+\end{frame}
+
+\begin{frame}[containsverbatim]{PIP}
+  pip is a tool to allow to install site packages. You can either download the "compressed" package (in a wheel format) and install it with
+  \begin{minted}[breaklines=true,frame=single]{bash}
+  pip install DOWNLOADED.whl
+  \end{minted}
+
+  Or you can have pip automatically download the module for you! The available modules can be found at \url{https://pypi.org/}. The download syntax is the same, for example
+  \begin{minted}[breaklines=true,frame=single]{bash}
+  pip install numpy
+  \end{minted}
+\end{frame}
+
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}

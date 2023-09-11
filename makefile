@@ -7,10 +7,10 @@ PROGS = $(patsubst %.tex,%.pdf,$(SRCS))
 all: $(PROGS)
 
 clean:
-	rm -f *.pdf *.toc *.aux *.log *.snm *.out *.nav
-	ls | grep '_minted*' | xargs rm -rf
+	rm -r build
 
 %.pdf: %.tex
-	$(TEX_COMPILER) -shell-escape $<
+	mkdir -p build
+	$(TEX_COMPILER) -output-directory=build -shell-escape $<
 	# do it twice, as bookmarks and whatnot need a second re-run
-	$(TEX_COMPILER) -shell-escape $<
+	$(TEX_COMPILER) -output-directory=build -shell-escape $<

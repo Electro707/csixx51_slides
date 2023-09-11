@@ -4,30 +4,9 @@
 %
 % You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-\documentclass[10pt]{beamer}
-
-\usetheme[progressbar=frametitle, numbering=fraction, background=dark]{metropolis}
-\usepackage{appendixnumberbeamer}
-
-\usepackage{booktabs}
-\usepackage[scale=2]{ccicons}
-
-\usepackage{pgfplots}
-\usepgfplotslibrary{dateplot}
-
-\usepackage{hyperref}
-\usepackage{multimedia}
-% \usepackage{media9}
-
-\usepackage{enumerate}
-\usepackage[skip=2pt]{caption}
-
-\usepackage{multimedia}
-\usepackage{minted}
-
 \input{common.tex}
 
-\title{Lecture \#2}
+\title{Lecture \#2: Functions, Mutability, Input, and Strings}
 \date{\today}
 \author{Presented by Jamal Bouajjaj}
 \institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
@@ -41,14 +20,14 @@
     Python functions are just like any other programming language's functions. The following is the general syntax:
 
     \begin{minted}[breaklines=true,frame=single]{text}
-def iamafunction(INPUT):
+def iamafunction(ARG1, ARG2, ARG3=None, ARG4=b):
     something
     return OUTPUT
     \end{minted}
 \end{frame}
 
 \begin{frame}{Arugments}
-    Arguments are optional. There can be multiple
+    Arguments are optional. There can be multiple, and there are optional arguments that default to something if not passed to the function.
 \end{frame}
 
 \begin{frame}{Returns}

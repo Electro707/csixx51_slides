@@ -1,0 +1,232 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\title{Lecture \#6: Everything's an Object!}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[containsverbatim]{Definitions}
+  A \textit{namespace} is the mapping from a name to an object, for example \mintinline{python}{a = 5}, \verb|a| is the namespace for the object  that was just created.
+\end{frame}
+
+\section{Objects?}
+
+\begin{frame}{Objects!}
+  On a core programming level, an object is a \textit{thing} you can intract with. Similar to C++
+\end{frame}
+
+\begin{frame}{POP QUIZ}
+  POP QUIZ: Are the following an object?
+  \begin{itemize}
+    \item Class Instances: \pause YES \pause
+    \item Functions: \pause YES \pause
+    \item Lists: \pause YES \pause
+    \item Strings: \pause YES (trick question, same as list: sequences) \pause
+    \item Integers?: \pause YES \pause
+    \item You???: \pause wat
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{You PASS}
+  That's right, EVERYTHING in Python is an object and is treated as such.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Object Attributes}
+  Each object has attributes (or attribube references), which can be variables, function, or more! The attributes can be called with the dot syntax:
+
+  \mintinline{python}{object.attriube}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Wait...we've seen this before}
+  Remember things \mintinline{python}{"Hello!".endswith('1')}? Well that is because \mintinline{python}{"Hello!"} is a string object, and \mintinline{python}{endswith()} is an attribube of that function.
+\end{frame}
+
+\section{Classes}
+
+\begin{frame}[containsverbatim]{Definition}
+  Classes is a building block to making your own objects.
+
+  To make your own class, we can define one like below as an example
+\begin{minted}[breaklines=true,frame=single]{python}
+class A:
+  b = 5
+
+  def test(self):
+    return "test good"
+\end{minted}
+
+Where \verb|b| and \verb|test| are \textit{attributes} of that class.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Class Instance}
+  After declaration of your class, you can create instances of the class
+
+\begin{minted}[breaklines=true,frame=single]{python}
+b = A() # instance
+print(b.b)
+b.test()
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Variables}
+  A class variables is one that is defined in the class, and is shared by all classes
+\begin{minted}[breaklines=true,frame=single]{python}
+class Fruit:
+  is_fruit = True
+
+orange = Fruit()
+apple = Fruit()
+
+print(orange.is_fruit)
+print(apple.is_fruit)
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Variables Caveat}
+  There is a caveat when objects are not re-definable (i.e mutable)
+\begin{minted}[breaklines=true,frame=single]{python}
+class Fruit:
+  fruit_types = []
+  name = None
+
+orange = Fruit()
+apple = Fruit()
+
+orange.name = "orange"    # New object is created
+orange.fruit_types.append('orange') # wait a minute...
+print(apple.name)                   # ...
+print(apple.fruit_types)            # wat
+\end{minted}
+We'll get to how to fix this soon!
+\end{frame}
+
+\begin{frame}[containsverbatim]{Instance Objects}
+  In classes, you can have instance-specific objects refered to with \verb|self| in the class.
+\begin{minted}[fontsize=\small,breaklines=true,frame=single]{python}
+class Fruit:
+  def append_fruit(self, f_name):
+    if not hasattr(self, 'b'):
+      self.b = []
+    self.b.append(f_name)
+
+orange = Fruit()
+orange.append_fruit('orange')
+apple = Fruit()
+apple.append_fruit('apple')
+orange.append_fruit('orange2')
+
+print(apple.b)
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Functions and Self}
+  Each class function is automatically given one argument: \verb|self|. This refers to the object's own instance.
+
+  You don't pass in a \verb|self| when you call the class instance's function
+
+  Technically it's just an argument, so it doesn't have to be named \verb|self|, but that is convention.
+\end{frame}
+
+
+\begin{frame}[containsverbatim]{Special Class Name}
+  In Python, there are some class names that gets called automatically depending on what is done to the object or around it, which are \textit{special names}.
+
+  The most popular one is \verb|__init__()|, where it gets called when a class object is initialized, and is useful to define some stuff
+\end{frame}
+
+\begin{frame}[containsverbatim]{Init}
+  \begin{minted}[breaklines=true,frame=single]{python}
+class Fruit:
+  def __init__(self, name):
+    print("-> Initializing")
+    self.name = name
+
+orange = Fruit('orange')
+print(orange.name)
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]{Fun ones}
+  There are some fun ones, such as when objects get added:
+  \begin{minted}[fontsize=\small,breaklines=true,frame=single]{python}
+class Fruit:
+    def __init__(self, name):
+        self.type = name
+    def __add__(self, other):
+        if hasattr(other, 'type'):
+            if other.type == 'orange' and self.type == 'apple':
+                return 'banana'
+        return None
+
+apple = Fruit('apple')
+orange = Fruit('orange')
+
+print(apple + orange)
+print(orange + apple)
+\end{minted}
+\end{frame}
+
+\begin{frame}{No Privacy!}
+  In Python there is not such thing as a "private" variable as you would in C++.
+
+  Convension is to have "private" variables start with an underscore, and hope nobody accesses it!
+\end{frame}
+
+\begin{frame}[containsverbatim]{Well...Sort of}
+  There is a not-known feature known as name mangling, where a method with two leading underscores (but no more than 1 trailing one) like \mintinline{python}{__var} will be replaced with \mintinline{python}{_classname__var}.
+
+  You can still access the \mintinline{python}{_classname__var} method.
+
+  So sort of useful I guess, but not really used though.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Subclassing}
+  Classes can be sub-classes, which the sub-class will inherit all attribues. You can overide them, or re-call them with \verb|super()|
+
+\begin{minted}[fontsize=\scriptsize,breaklines=true,frame=single]{python}
+class Fruit:
+    def buy(self):
+      print("Give Kromer")
+    def mix(self):
+      print("Mixing")
+    def eat(self):
+      print("Eating...yummy")
+
+class Watermelon(Fruit):
+    def eat(self):
+      super().eat()
+      #Fruit.eat(self)  # possible, don't use!
+      print("\tVery water-y")
+    def mix(self):
+      print("Not mixable")
+
+w = Watermelon()
+w.buy()
+w.mix()
+w.eat()
+\end{minted}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}
