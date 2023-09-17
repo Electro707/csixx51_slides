@@ -6,7 +6,7 @@
 
 \input{common.tex}
 
-\title{Lecture \#7: Modules}
+\title{Lecture \#7: Modules and Venv}
 \date{\today}
 \author{Presented by Jamal Bouajjaj}
 \institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
@@ -109,6 +109,61 @@ print(pi)   # Is now in our local namespace..again
   \begin{minted}[breaklines=true,frame=single]{bash}
   pip install numpy
   \end{minted}
+\end{frame}
+
+\section{venv}
+\begin{frame}[containsverbatim]{Dependency Hell}
+  What if for one project you need \verb|pymongo==4.5.0| for for another project you need \verb|pymongo==3.13.0|?
+
+  You can't have your system site package include both: they conflict with another! \pause
+
+  Give up???
+\end{frame}
+
+\begin{frame}{No!}
+  What if you can have a local environment that includes all dependencies required by your project, but nothing else?
+
+  Like a sandbox of dependencies
+\end{frame}
+
+\begin{frame}{Virtualize the Environment}
+  This does exist: Virtual Environments.
+
+  As site packages is just a path where to live, virtual environments can point the site-package directory to a local folder so it doesn't interfere with system packages.
+
+  A virtual environment also has an internal sym-link to the correct system python interpreter version, for example 3.7.10 vs 3.11.0, so your virtual environment also can dictate the python version it wants to run as (must still be installed system-wide).
+\end{frame}
+
+\begin{frame}[containsverbatim]{Make it!}
+  To make one, call the Python \verb|venv| module and specify the path to make the virtual environment in:
+  \begin{minted}[breaklines=true,frame=single]{bash}
+  python -m venv .venv
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Use it!}
+  To use it, activate it by running `activate.bat` if using CMD
+  \begin{minted}[breaklines=true,frame=single]{batch}
+  .venv/Script/activate.bat
+  \end{minted}
+
+  or the .ps1 file if using powershell
+  \begin{minted}[breaklines=true,frame=single]{powershell}
+  .venv/Script/activate.ps1
+  \end{minted}
+
+  To source the activate file if using a sane OS:
+  \begin{minted}[breaklines=true,frame=single]{bash}
+  source .venv/bin/activate
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Bop it!}
+  Now when you call \verb|python| or \verb|pip|, it will use the virtual environment's python.
+\end{frame}
+
+\begin{frame}[containsverbatim]{PyCharm}
+  PyCharm also has nice support for virtual environments. I will be demonstrating it!
 \end{frame}
 
 
