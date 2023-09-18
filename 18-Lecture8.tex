@@ -1,0 +1,176 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\title{Lecture \#8: with and Files}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\section{with}
+
+\begin{frame}[containsverbatim]{with statement}
+  The \verb|with| statement is a special statement designed to wrap execution with a block of a \textit{Context Manager}.
+
+  So \verb|with| will handle the context manager it's given, and is guaranteed to exit it properly no matter what.
+\end{frame}
+
+\begin{frame}[containsverbatim]{with statement}
+  This is the syntax of a \verb|with| block. The \verb|as| is optional:
+\begin{minted}[breaklines=true,frame=single]{python}
+with CONTEXT:
+  <-- stuff -->
+with CONTEXT as f:
+  <-- stuff -->
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Context Manager}
+  A \textit{Context Manager} is an object that defines how it's resource is used when the \verb|with| block is entered and exited.
+
+  The context manager object must define two methods: \verb|__enter__(self)| and \verb|__exit__(self, exc_type, exc_value, traceback)|.
+
+  the enter method executes when the with block is entered, and can optionally return a variable for the block to use.
+
+  The exit method gets called when the with block is exited, no matter what happens. The input arguments are optionally given by the with function if there was an exception raised within the block.
+\end{frame}
+
+\begin{frame}[containsverbatim]{example}
+\begin{minted}[breaklines=true,frame=single]{python}
+class WithExampleClass:
+  def __enter__(self):
+    print("-> We are entering the object")
+    return "something"
+  def __exit__(self, exc_type, exc_value, traceback):
+    print("-> We are exiting the with block")
+
+o = WithExampleClass()
+with o as a:
+  print(f"we are in the with block with '{a}'")
+  #raise UserWarning("oh no a problem")
+  print("doing stuff")
+\end{minted}
+\end{frame}
+
+\section{Files}
+
+\begin{frame}[containsverbatim]{stream}
+  Files can be though of, and are treated as, as stream of data.
+  The stream can be indexed.
+
+  Think of it as a river, where naturally you go down until it ends, but magically can teleport where you are in the river.
+\end{frame}
+
+\begin{frame}[containsverbatim]{open sesame}
+  Files can be read with the
+
+  \mintinline{python}{open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)}
+
+  built in Python function. The primary arguments to be given is \verb|file| and \verb|mode|: the file name and the opening mode.
+
+  Buffering is whether to buffer the file, and by how many bytes. 0 is for no buffering, and -1 is for default buffer size.
+
+  The rest of the arguments arent't as important, but do read up on it on the docs.
+\end{frame}
+
+\begin{frame}[containsverbatim]{mode}
+  There are several mode to open the file with, some are mutually exlusive. They are denoted by characters that are concatenated for the mode, which are:
+  \begin{itemize}
+    \item 'r' $\leftarrow$ open for reading (default)
+    \item 'w' $\leftarrow$ open for writting
+    \item 'x' $\leftarrow$ open for exclusive creation
+    \item 'a' $\leftarrow$ open for append writting if file exist
+    \item 'b' $\leftarrow$ binary mode
+    \item 't' $\leftarrow$ text mode (default)
+    \item '+' $\leftarrow$ open for reading and writting (updating)
+  \end{itemize}
+
+  So 'rb' is to open a file for read in binary mode for example.
+\end{frame}
+
+\begin{frame}[containsverbatim]{open return}
+  The object returned by \verb|open| depends on the mode the file was opened with, and the buffering argument.
+  The following are the abstract base classes for the class object that is returned:
+  \begin{itemize}
+    \item \verb|RawIOBase| $\leftarrow$ For stream of bytes
+    \item \verb|BufferedIOBase| $\leftarrow$ For buffering on a \verb|RawIOBase|
+    \item \verb|TextIOBase| $\leftarrow$ For stream of bytes representing text.
+  \end{itemize}
+  They all inherit \verb|IOBase|.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Basic Callbacks}
+  Here are some basic functions of the classes above you should know about:
+  \begin{itemize}
+    \item \verb|read(x)| Reads the entire file, or x bytes if specified
+    \item \verb|readline()| Reads until a new line character, returning the line
+    \item \verb|write(x)| Writes x data into the file
+    \item \verb|tell()| Returns the current stream position
+    \item \verb|seek(x)| Sets the stream position to x
+    \item \verb|close()| Closes the I/O
+  \end{itemize}
+
+  If the current stream position is EOF (End-Of-File), then read returns an empty string or byte.
+
+  Generally, it's BAD to just call \verb|read()| without any arguments, especially for a large file.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Example}
+\begin{minted}[breaklines=true,frame=single]{python}
+f = open('text.txt', 'r')   # default, read-only as text
+print(f.readline())         # read a single line
+print(f.tell())       # where we are in the stream
+f.seek(0)             # go back to start of file
+print(f.read(1))         # read a single char
+print(f.read())         # read until EOL
+f.close()             # close file
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Itterable}
+  What if you want to read the file line by line in a for loop? \pause
+
+  Thankfully, \verb|IOBase| implements the \verb|__iter__()| and \verb|__next__()|
+  \begin{minted}[breaklines=true,frame=single]{python}
+f = open('text.txt')   # default, read-only as text
+for line in f:
+  print("line read: ", line)
+f.close()             # close file
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Closing Files}
+  For good practice, you must close the file when you are done with it. This allows other programs to access the file.
+
+  But what if you are only accessing a file in a single block. Wouldn't it be nice if there was a block operation that automatically closed the file for you?
+\end{frame}
+
+\begin{frame}[containsverbatim]{with file}
+  As it turns out, a \verb|IOBase| does implement the \verb|__enter__()| and \verb|__exit__()| callbacks!
+\begin{minted}[breaklines=true,frame=single]{python}
+with open('text.txt', 'r') as f:
+  for line in f:
+    print("line read: ", line)
+\end{minted}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}

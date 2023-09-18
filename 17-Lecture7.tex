@@ -46,6 +46,18 @@ import config
   \verb|config| is now imported as an object containing all functions, classes, and variables from \verb|config.py|
 \end{frame}
 
+\begin{frame}[fragile]{name}
+  If \verb|config.py| had some things executed (i.e code that runs if the file is ran, isn't a declaration), importing the file will cause that code to run, which is not intentional. \pause
+
+  What if you need to be able to run the script independently, but also able to import it? \pause
+
+  This is where \verb|__name__| comes in handy:
+    \begin{minted}[breaklines=true,frame=single]{python}
+if __name__ == "__main__":
+  DO SOMETHING
+  \end{minted}
+\end{frame}
+
 \begin{frame}[containsverbatim]{Import statement}
   The full syntax for import is \mintinline{python}{import MODULE as NAME} or \mintinline{python}{from MODULE import IDENTIFIER as NAME}.
 
@@ -152,7 +164,7 @@ print(pi)   # Is now in our local namespace..again
   .venv/Script/activate.ps1
   \end{minted}
 
-  To source the activate file if using a sane OS:
+  To source the activate file if using a reasonable shell (Linux or MacOS):
   \begin{minted}[breaklines=true,frame=single]{bash}
   source .venv/bin/activate
   \end{minted}
