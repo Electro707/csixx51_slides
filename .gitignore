@@ -5,4 +5,7 @@
 *.pdf
 *.aux
 *.nav
+*.vrb
 _minted*/
+build/
+pdf_out/
