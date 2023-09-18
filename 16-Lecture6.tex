@@ -49,13 +49,19 @@
 \end{frame}
 
 \begin{frame}[containsverbatim]{Object Attributes}
-  Each object has attributes (or attribube references), which can be variables, function, or more! The attributes can be called with the dot syntax:
+  Each object can have attributes (or attribube references), which are variables pertaining to the object. The attributes can be called with the dot syntax:
 
   \mintinline{python}{object.attriube}
 \end{frame}
 
+\begin{frame}[containsverbatim]{Object Methods}
+  Each object can have methods, which are functions inside the object.
+
+  \mintinline{python}{object.method()}
+\end{frame}
+
 \begin{frame}[containsverbatim]{Wait...we've seen this before}
-  Remember things \mintinline{python}{"Hello!".endswith('1')}? Well that is because \mintinline{python}{"Hello!"} is a string object, and \mintinline{python}{endswith()} is an attribube of that function.
+  Remember things \mintinline{python}{"Hello!".endswith('1')}? Well that is because \mintinline{python}{"Hello!"} is a string object, and \mintinline{python}{endswith()} is a method of that object.
 \end{frame}
 
 \section{Classes}
@@ -72,11 +78,11 @@ class A:
     return "test good"
 \end{minted}
 
-Where \verb|b| and \verb|test| are \textit{attributes} of that class.
+Where \verb|b| is an \textit{attribute} and \verb|test| is a \textit{method} of that class.
 \end{frame}
 
 \begin{frame}[containsverbatim]{Class Instance}
-  After declaration of your class, you can create instances of the class
+  After declaration of your class, you can create instances of the class.
 
 \begin{minted}[breaklines=true,frame=single]{python}
 b = A() # instance
@@ -199,7 +205,7 @@ print(orange + apple)
 \end{frame}
 
 \begin{frame}[containsverbatim]{Subclassing}
-  Classes can be sub-classes, which the sub-class will inherit all attribues. You can overide them, or re-call them with \verb|super()|
+  Classes can be sub-classes, which the sub-class will inherit all attribues and methods. You can overide them, or re-call them with \verb|super()|
 
 \begin{minted}[fontsize=\scriptsize,breaklines=true,frame=single]{python}
 class Fruit:
