@@ -78,9 +78,9 @@ with o as a:
 
 \begin{frame}[containsverbatim]{open sesame}
   Files can be read with the
-
-  \mintinline{python}{open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)}
-
+  \begin{minted}[breaklines=true,frame=single]{python}
+open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)
+\end{minted}
   built in Python function. The primary arguments to be given is \verb|file| and \verb|mode|: the file name and the opening mode.
 
   Buffering is whether to buffer the file, and by how many bytes. 0 is for no buffering, and -1 is for default buffer size.
