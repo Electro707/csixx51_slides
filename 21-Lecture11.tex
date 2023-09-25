@@ -1,0 +1,167 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\title{Lecture \#11: logging}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Logging Stuff}
+  Let's say you have a functional application. Cool!\pause
+
+  Now what if during run-time an error happended? Wouldn't you like to know what occured?
+  Both during debugging and deployment?
+\end{frame}
+
+\begin{frame}[containsverbatim]{Naive Logging}
+  The following is a simple way to "log" stuff to the terminal. The simple print statement.
+\begin{minted}[breaklines=true,frame=single]{python}
+a = some_function(5, 2)
+print(f"a is {a}")
+try:
+  do_something_else(a, 50)
+except ValueError as e:
+  print("Exception here! ", e)
+\end{minted}
+\end{frame}
+
+\begin{frame}{logging Module}
+  While the above could be sufficient, there are a couple of issues/downsides:
+  \begin{itemize}
+    \item If this is a CLI application, the user application will have print-outs that aren't relavent to what the user needs.
+    \item There is no distunction between important errors and just debug logs.
+    \item What is printed does not get sent to a file, allowing loss of information with no way of getting it.
+    \item If a GUI application, there will be no console. Same as above
+    \item Exception printing is limited
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Solutions}
+  Enough rambling, what is a viable solution?\pause
+  \begin{itemize}
+    \item Force the user to open a command-line when running the application, and requiring them to copy the output if there is an error\pause
+    \item Give up!\pause
+    \item Ignore any errors, they aren't important.\pause
+    \item Use the \textit{logging} module
+  \end{itemize}
+\end{frame}
+
+\section{logging}
+
+\begin{frame}{logging}
+  logging is a standard module that is designed to handle logging stuff in your application.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Logger}
+  A Logger is an object that handles logging. There is always a root logger (top level), and you can create a logging handler. Each logger can have it's own "settings", as in levels, handlers, etc.
+
+  Getting a logger with the same name will return the same logger.
+
+  A logger name is hierarchal, so root is the top level, then all other loggers are child loggers. A dot indicates a child of the logger name.
+  \begin{minted}[breaklines=true,frame=single]{python}
+l = logging.getLogger() # root logger
+l = logging.getLogger('sensor')   # a logger with name
+l = logging.getLogger('sensor.ser')  # a logger with name, child of sensor
+\end{minted}
+\end{frame}
+
+\begin{frame}{Log Levels}
+  There are several levels of log message withing the module\footnote{\url{https://docs.python.org/3/howto/logging.html}}:
+  \begin{itemize}
+    \item DEBUG
+    \item INFO
+    \item WARNING
+    \item ERROR
+    \item CRITICAL
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Level Example}
+  This is how to log with levels
+  \begin{minted}[breaklines=true,frame=single]{python}
+l = logging.getLogger() # root logger
+l.debug("Message")
+l.info("Message")
+l.warning("Message")
+l.error("Message")
+l.critical("Message")
+# calls to logging (the module) directly will just log with the root logger
+logging.debug("Message")
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Exception Logging}
+  You can also log exceptions, which will also record the traceback! The level is ERROR.
+  \begin{minted}[breaklines=true,frame=single]{python}
+l = logging.getLogger() # root logger
+try:
+  a = 5 / 0
+except:
+  logging.exception("Error!")
+\end{minted}
+\end{frame}
+
+\begin{frame}{Log Handlers}
+  Once a log is emmited (i.e sent), where does it get sent? That is determined by what handlers exist for the logger.
+
+  The handler just handles what to do with a log.
+
+  Each handler can have a level: anything below the set level is ignored for the handler.
+
+  The handler is applied to a logger on a hierarchal basis. So a handler for the root logger will get called for all child loggers, etc.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Log Handlers}
+  \begin{minted}[breaklines=true,frame=single]{python}
+l = logging.getLogger()
+hs = logging.StreamHandler()
+hs.setLevel(logging.WARNING)
+l.addHandler(hs)
+fs = logging.FileHandler("file.log")
+hs.setLevel(logging.DEBUG)
+l.addHandler(fs)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Log Format}
+  You can change what each log handler formats it's output. You can for example have a log output the function name, time, message, etc.
+    \begin{minted}[breaklines=true,frame=single]{python}
+l = logging.getLogger()
+hs = logging.StreamHandler()
+hs.setLevel(logging.WARNING)
+f = logging.Formatter("%(asctime)s %(levelname)s:%(filename)s:%(funcName)s:%(lineno)s %(message)s")
+hs.setFormatter(f)
+l.addHandler(hs)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Logging Without Setup!}
+  logging can have a decent amount of setup for it. If you just want something to just log in the strem, and maybe file, you can have logging setup a lot for you by using the following function:
+  \begin{minted}[breaklines=true,frame=single]{python}
+logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, filename="program.log")
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}

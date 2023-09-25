@@ -1,0 +1,270 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\title{Lecture \#9: JSON and HTML}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\section{JSON}
+
+\begin{frame}[containsverbatim]{JSON File}
+  \textit{JSON} is an open format designed for computer data interchange, but also is human readable. It's very populate on the Web to exchange data, and Javascript easily eats it up.\pause
+
+  JSON stores data in a key-value pair or arrays.
+
+  The full standard can be found in json.org, specified by RFC8259 and ECMA-404.
+\end{frame}
+
+\begin{frame}[containsverbatim]{JSON Example}
+  Here is an example of a JSON file/data set:
+\begin{minted}[breaklines=true,frame=single,fontsize=\tiny]{json}
+{
+  "first_name": "John",
+  "last_name": "Smith",
+  "is_alive": true,
+  "age": 27,
+  "address": {
+    "street_address": "21 2nd Street",
+    "city": "New York",
+    "state": "NY",
+    "postal_code": "10021-3100"
+  },
+  "phone_numbers": [
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "office",
+      "number": "646 555-4567"
+    }
+  ],
+  "children": [
+    "Catherine",
+    "Thomas",
+    "Trevor"
+  ],
+  "spouse": null
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}{Wait...key value?}
+  Wait a second, did you just say key-value pairs?\pause
+
+  Isn't that same same as a Python dictionary?\pause
+
+  To that I say...YES!
+  A JSON file can be easily imported and save from/to a Python dictionary, making them quite easy to play with.
+\end{frame}
+
+\begin{frame}{JSON Module}
+  The Python standard library has a nice module called \textit{json} that nicely loads and saves JSON files.
+\end{frame}
+
+\begin{frame}{JSON Module Example}
+See lecture9-json.py
+\end{frame}
+
+\section{HTTP}
+
+\begin{frame}{HTTP}
+  HTTP is a an abstraction layer protocol (highest level on OSI level) for distributed, collaborative, hypertext information systems\footnote{RFC9110, \url{https://datatracker.ietf.org/doc/html/rfc9110}}.
+
+  Hypertext is simply data that can refer to another data. For example, an HTML document that refers to another CSS file for styling.
+
+  This protocol is what the World-Wide-Web is built upon.
+
+  HTTP is a request-response protocol with a client-server model. The protocol is also stateless.\footnote{\url{https://en.wikipedia.org/wiki/HTTP}}.
+\end{frame}
+
+\begin{frame}{Request Methods}
+  HTTP has many possible request methods a client can make.
+
+  HTTP has many request methods, but two are the most common:
+  \begin{itemize}
+    \item \textbf{GET}: Request an info from the server. This should have no other effect other than getting the data.
+    \item \textbf{POST}: Mostly for sending some information to a server, for example to post something.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Return Code}
+  Per transaction, the server returns a return code as a 3 digit number. Here are what the 3rd digit of the code means, and some common example
+  \begin{itemize}
+    \item \textbf{1xx}: Information Response
+    \item \textbf{2xx}: Sucess
+    \begin{itemize}
+      \item \textbf{200}: OK
+    \end{itemize}
+    \item \textbf{3xx}: Redirection
+    \item \textbf{4xx}: Client Error
+    \begin{itemize}
+      \item \textbf{404}: Not Found
+    \end{itemize}
+    \item \textbf{5xx}: Server Error
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{HTTP Message}
+  An HTTP message body has the following information\footnote{\url{https://en.wikipedia.org/wiki/HTTP_message_body}}:
+  \begin{itemize}
+    \item \textbf{Request Line} (GET /logo.gif HTTP/1.1) or \textbf{Status Line} (HTTP/1.1 200 OK)
+    \item \textbf{Headers}
+    \item \textbf{Empty Line}
+    \item \textbf{Message Body Data}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{SECURITY}
+  HTTP is \textbf{NOT SECURE!!!!!!!!}. DO NOT TRY and send sensitive data across HTTP alone.I'll be demonstrating this in Wireshark\pause
+
+  If you want secure content, use HTTPS, which encrypts your data over TLS. This is shown in your browser by the padlock icon, and almost all websites have HTTPS implemented.\pause
+
+  {\small Side note: To all of the VPN ads that state they will "encrypt your data to prevent hackers", this isn't correct for the most part. Your data send to and from the server is already encrypted with "military grade encryption" (i.e AES)}
+\end{frame}
+
+\begin{frame}{HTTP example}
+  Let's try to get an HTTP request. I will be using the tool \textit{curl}, which is available on Linux, FreeBSD, and MacOS. On Windows you will have to get it (good luck without a package manager!)
+\end{frame}
+
+\begin{frame}{API}
+  An \textit{API} is simply an interface designed for computers to talk to each other. It is simply a specification.
+
+  A \textit{Web API} is an API that uses HTTP as the transfer protocol. It is the most common usage of the term API.
+
+  The most popular type of return content type for an API is JSON or XML.\pause JSON, so...\pause YES, Python makes interfacing with web APIs and parsing thru the data quite easily. XML too, but I don't cover that today as it's the lesser popular.
+\end{frame}
+
+\begin{frame}{HTTP in Python}
+  There are two main modules used to simplify requesting HTTP content in Python:
+  \begin{itemize}
+    \item urllib.request (Standard Library)
+    \item requests
+  \end{itemize}
+
+  Both handle re-directs for you (from a 301 status code for example). They also handle HTTPS for you!
+\end{frame}
+
+\begin{frame}[containsverbatim]{URL Lib Example}
+\begin{minted}[breaklines=true,frame=single]{python}
+import urllib.request
+with urllib.request.urlopen("https://semver.org") as u:
+  print("->", u.status)
+  print("->", u.reason)
+  print("->", u.url)
+  print("->", u.getheaders())
+  print("->", u.read())
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{GET with Data}
+\begin{minted}[breaklines=true,frame=single]{python}
+url = "https://api.weather.gov/gridpoints/OKX/65,67/forecast"
+u = urllib.request.urlopen(url)
+print("->", u.status)
+print("->", u.reason)
+print("->", u.url)
+print("->", u.getheaders())
+print("->", u.read())
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{GET with Data}
+\begin{minted}[breaklines=true,frame=single]{python}
+url = "https://opentdb.com/api.php"
+data = {'amount': 10}
+url = url + '?' + urllib.parse.urlencode(data)
+u = urllib.request.urlopen(url)
+print("->", u.status)
+print("->", u.reason)
+print("->", u.url)
+print("->", u.getheaders())
+print("->", u.read())
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{POST with Data}
+\begin{minted}[breaklines=true,frame=single]{python}
+url = "https://reqres.in/api/users"
+data = {'name': 'morpheus', 'job': 'leader'}
+header = {'User-Agent' : 'Mozilla/5.0'} # due to it rejecting otherwise
+data = urllib.parse.urlencode(data).encode()
+url = urllib.request.Request(url, data, header)
+u = urllib.request.urlopen(url)
+print("->", u.status)
+print("->", u.reason)
+print("->", u.url)
+print("->", u.getheaders())
+#print("->", u.read())
+data = json.load(u)
+print(data)
+\end{minted}
+\end{frame}
+
+\begin{frame}{requests}
+  \textit{requests} is an non-standard Python module (so must be installed) that makes HTTP communication a little easier.
+\end{frame}
+
+\begin{frame}[containsverbatim]{requests example}
+\begin{minted}[breaklines=true,frame=single]{python}
+import requests
+u = requests.get("https://semver.org")
+print("->", u.status_code)
+print("->", u.reason)
+print("->", u.url)
+print("->", u.headers)
+print("->", u.text)
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{GET with Data}
+\begin{minted}[breaklines=true,frame=single]{python}
+url = "https://opentdb.com/api.php"
+data = {'amount': 10}
+u = requests.get(url, data)
+print("->", u.status_code)
+print("->", u.reason)
+print("->", u.url)
+print("->", u.headers)
+# print("->", u.text)
+print("->", u.json())
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{POST with Data}
+\begin{minted}[breaklines=true,frame=single]{python}
+url = "https://reqres.in/api/users"
+data = {'name': 'morpheus', 'job': 'leader'}
+header = {'User-Agent' : 'Mozilla/5.0'} # due to it rejecting otherwise
+u = requests.post(url, data, headers=header)
+print("->", u.status_code)
+print("->", u.reason)
+print("->", u.url)
+print("->", u.headers)
+# print("->", u.text)
+print("->", u.json())
+\end{minted}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}
