@@ -69,7 +69,7 @@ except ValueError as e:
 \end{frame}
 
 \begin{frame}[containsverbatim]{Logger}
-  A Logger is an object that handles logging. There is always a root logger (top level), and you can create a logging handler. Each logger can have it's own "settings", as in levels, handlers, etc.
+  A Logger is an object that handles logging. There is always a root logger (top level), and you can create a logging handler. Each logger can have it's own "settings", as in level and handlers.
 
   Getting a logger with the same name will return the same logger.
 
@@ -84,18 +84,23 @@ l = logging.getLogger('sensor.ser')  # a logger with name, child of sensor
 \begin{frame}{Log Levels}
   There are several levels of log message withing the module\footnote{\url{https://docs.python.org/3/howto/logging.html}}:
   \begin{itemize}
+    \item NOSET (placeholder for nothing set, not a real level)
     \item DEBUG
     \item INFO
     \item WARNING
     \item ERROR
     \item CRITICAL
   \end{itemize}
+  Any level less than the set level is ignored, either by the logger object itself or a handler.
+
+  A logger object by default assumes a level of WARNING.
 \end{frame}
 
 \begin{frame}[containsverbatim]{Level Example}
-  This is how to log with levels
+  This is how to log with levels. The logger itself must have a level set unless you want WARNING or above to be logged.
   \begin{minted}[breaklines=true,frame=single]{python}
 l = logging.getLogger() # root logger
+l.setLevel(logging.DEBUG) # set logger level
 l.debug("Message")
 l.info("Message")
 l.warning("Message")
@@ -107,7 +112,7 @@ logging.debug("Message")
 \end{frame}
 
 \begin{frame}[containsverbatim]{Exception Logging}
-  You can also log exceptions, which will also record the traceback! The level is ERROR.
+  You can also log exceptions, which will also record the traceback! The level for exception logs is ERROR.
   \begin{minted}[breaklines=true,frame=single]{python}
 l = logging.getLogger() # root logger
 try:
@@ -130,6 +135,7 @@ except:
 \begin{frame}[containsverbatim]{Log Handlers}
   \begin{minted}[breaklines=true,frame=single]{python}
 l = logging.getLogger()
+l.setLevel(logging.DEBUG) # set the logger's level
 hs = logging.StreamHandler()
 hs.setLevel(logging.WARNING)
 l.addHandler(hs)
@@ -143,6 +149,7 @@ l.addHandler(fs)
   You can change what each log handler formats it's output. You can for example have a log output the function name, time, message, etc.
     \begin{minted}[breaklines=true,frame=single]{python}
 l = logging.getLogger()
+l.setLevel(logging.DEBUG) # set the logger's level
 hs = logging.StreamHandler()
 hs.setLevel(logging.WARNING)
 f = logging.Formatter("%(asctime)s %(levelname)s:%(filename)s:%(funcName)s:%(lineno)s %(message)s")
@@ -158,7 +165,6 @@ logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG, filename="program.log")
 \end{minted}
 \end{frame}
-
 
 \begin{frame}[standout]{End}
   The end

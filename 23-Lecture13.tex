@@ -1,0 +1,170 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\usepackage{media9}
+
+\title{Lecture \#13: Threading and Queue}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[containsverbatim]{Problem}
+Let's say you have process that waits on something, for example a delay.
+    \begin{minted}[breaklines=true,frame=single]{python}
+import time
+def do_long_thing():
+    print("Doing a thing!")
+    time.sleep(1)
+    print("Done!")
+
+print("Other thing")
+do_long_thing()
+print("Oh no, I am delayed!")
+  \end{minted}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]{Problem}
+Or what if we want multiple things done together "at the same time"
+    \begin{minted}[breaklines=true,frame=single]{python}
+import time
+def do_long_thing(i):
+    print(f"Doing a thing for {i}")
+    time.sleep(1)
+    print("Done!")
+
+print("Other thing")
+for i in range(10):
+    do_long_thing(i)
+print("Oh no, I am delayed!")
+  \end{minted}
+\end{frame}
+
+\section{threading}
+
+\begin{frame}[containsverbatim]{Solved!}
+Welcome to the threading module. This runs a function in a thread, allowing async functions to run while your main application is running.
+    \begin{minted}[breaklines=true,frame=single]{python}
+import threading
+import time
+def do_long_thing(i):
+    print(f"Doing a thing for {i}")
+    time.sleep(1)
+    print("Done!")
+
+print("Other thing")
+for i in range(10):
+    t = threading.Thread(target=do_long_thing, args=(i, ))
+    t.start()
+print("yay, not delayed!")
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Making one}
+To make a thread, we call \verb|Thread| to make a \verb|Thread| object. Target is the function to run, and args are the arguments passed to the function given as a tuple.
+  \begin{minted}[breaklines=true,frame=single]{python}
+t = threading.Thread(target=TARGET, args=())
+\end{minted}
+This will return a Thread object
+\end{frame}
+
+
+\begin{frame}[containsverbatim]{Class Methods}
+The following are the main methods to a thread object:
+    \begin{minted}[breaklines=true,frame=single]{python}
+t.start()     # starts the thread
+t.is_alive()  # gets a bool depending if the thread is alive
+t.join()      # waits until the thread function is exited
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Only Once}
+A Thread object can only be ran once:
+    \begin{minted}[breaklines=true,frame=single]{python}
+t.start()
+t.join()
+t.start()   # This will fail
+\end{minted}
+\end{frame}
+
+\begin{frame}{Actual Threads}
+When you think of a "thread", you are thinking it's a seperate process that uses another CPU core...right?\pause
+
+What if I told you that is NOT the case!\pause
+
+One could also say...\pause
+
+An imposter thread \pause
+\sound[channels=2,samplingrate=44100,encoding=Raw,inlinesound,autostart,automute]{AMONG US!}{audio/AMONG-US.aif}
+(sorry)
+\end{frame}
+
+\section{Why?? GIL!}
+
+\begin{frame}{GIL}
+This because of the Python Global Intepreter Lock (GIL).
+
+This internal mechanism ensures that the intepreter only executes one bytecode at a time.
+
+This means that threading is not actually multi-CPU threaded, so your program will still run on one core.
+\end{frame}
+
+\begin{frame}{Communication}
+Let's say you have a thread and GUI thread. How will you ensure nice communication between the thread and GUI?
+
+You can just have a shared variable, but that is not thread safe, and can lead to race conditions.
+\end{frame}
+
+\section{Locks}
+
+\begin{frame}[containsverbatim]{Lock Object}
+A lock object, when called, will ensure the same lock is not executed elsewhere. It will hold the other process until the lock is released.
+  \begin{minted}[breaklines=true,frame=single]{python}
+tl = threading.Lock()
+tl.acquire()    # Get the lock
+tl.release()    # Release it back
+tl.locked()     # Get if the lock is locked
+with tl:  # this will acquire and release for you!
+  something()
+\end{minted}
+\end{frame}
+
+\section{Queue}
+\begin{frame}[containsverbatim]{Lock Object}
+If you want to send data back and forth, one useful thread-safe way to do so is with a Queue. This is a seperate module: queue.
+
+A Queue is a FIFO buffer that can have stuff put into it, and stuff retreived from.
+\begin{minted}[breaklines=true,frame=single]{python}
+import queue
+#q = queue.Queue(maxsize=0)  # maxsize is optional, can be set to limit size
+q = queue.Queue()
+q.put(123)
+print(q.qsize())
+print(q.empty())
+print(q.full())   # if Queue was given a size
+print(q.get())
+q.join()  # Wait until all items have been grabbed.
+\end{minted}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}

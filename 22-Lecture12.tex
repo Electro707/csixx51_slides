@@ -1,0 +1,312 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\title{Lecture \#12: Misc \#1}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Misc}
+  This lecture/presentation is for a collection of stuff that I either missed, or stuff which is small to not warrant a whole class for them individually, but enough for multiple of them
+\end{frame}
+
+\section{Tuple "Collapsing"}
+\begin{frame}[containsverbatim]{Tuple Collapsing}
+  If you declare a tuple with one element, by default it will ignore your parenthesis, making it into a not-tuple as parenthesis can also be used to have order of operation.
+
+  To make a one-element tuple into one, add a comma after the first element
+  \begin{minted}[breaklines=true,frame=single]{python}
+print(type( (1) ))   # int
+print(type( (1,) ))  # tuple
+  \end{minted}
+\end{frame}
+
+\section{Unpacking and Packing}
+\begin{frame}[fragile]{List Unpacking}
+  What if you have a Python list, where that list is actually input arguments to a function. Can you pass all of them to the function?\pause
+
+  YES, by unpacking the list. Unpacking just means to take the elements of the sequence, and set them as arguments to a function. This is done with a star *. For example:
+  \begin{minted}[breaklines=true,frame=single]{python}
+def addThreeNumbers(a, b, c):
+    return a + b + c
+# The following are equivalent
+addThreeNumbers(1, 2, 3)
+addThreeNumbers(*[1, 2, 3])
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Dict Unpacking}
+  If done with a dictionary, then the keys become the variable identifier, and the value is...well...the value of that identifier. Dictionary unpacking is done with two stars **.
+  \begin{minted}[breaklines=true,frame=single]{python}
+def addThreeNumbers(a, b, c):
+    return a + b + c
+# The following are equivalent
+addThreeNumbers(a=1, b=2, c=3)
+addThreeNumbers(**{'a': 1, 'b': 2, 'c': 3})
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Function Packing}
+  Now what if you need a function to take multiple user inputs, but have the flexiblity to have any amount. You CAN have the user just enter a list as an argument, but there is another way.\pause
+
+  The same syntax for list unpacking sort of works backwards if it's an argument of a function: Take all of the keywords by the user, and pack them into a list. The text \textit{args} isn't fixed, but it's the standard
+
+  \begin{minted}[breaklines=true,frame=single]{python}
+def addNumbers(*args):
+    return sum(args)
+addNumbers(1, 2, 3)
+addNumbers(1, 2, 3, 4, 5, 6, 7)
+  \end{minted}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]{Function Dict Packing}
+  Same concept works for dictionaries. The standard text is \textit{kwargs}
+
+  \begin{minted}[breaklines=true,frame=single]{python}
+def addNumbers(**kwargs):
+    if 'a' in kwargs:
+        return 'A in args'
+    return 'no a in args'
+addNumbers(a=2, b=1, fes=1)
+addNumbers(hb=3, bc=1, bjh=2)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Why not both?}
+    \begin{minted}[breaklines=true,frame=single]{python}
+def addNumbers(*args, **kwargs):
+    print(len(args))
+    if 'a' in kwargs:
+        return 'A in args'
+    return 'no a in args'
+
+addNumbers(2, 4, 1)
+addNumbers(2, 4, 1, a=2, b=1, fes=1)
+addNumbers(hb=3, bc=1, bjh=2)
+  \end{minted}
+\end{frame}
+
+\section{Lambda}
+\begin{frame}[fragile]{Lambda Function}
+  A lambda function is constructor to make anonymous functions. What lambda returns is a function that can be called.
+
+  An anonymous function (a general programming term) is a function without a name.\pause
+
+  A $\lambda$ function has the following syntax:
+  \begin{minted}[breaklines=true,frame=single]{python}
+lambda *VAR: SOMETHING
+  \end{minted}
+  The function above takes arguments, and whatever that SOMETHING does is what the lambda function returns.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Example}
+\begin{minted}[breaklines=true,frame=single]{python}
+def stripFunction(a):
+    return a.strip()
+with open('file') as f:
+    r = map(stripFunction, f)
+    # OR
+    r = map(lambda x: x.strip(), f)
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Other use}
+  Also useful for having a function that will execute later on with arguments:
+    \begin{minted}[breaklines=true,frame=single]{python}
+def ret(x):
+    print(x)
+
+functions = []
+for i in range(100):
+    #functions.append(ret(i))   # <- not good!
+    functions.append(lambda i=i: ret(i))
+
+functions[0]()    # a bit cursed...no?
+  \end{minted}
+\end{frame}
+
+\section{Block Documentation}
+\begin{frame}[containsverbatim]{Block}
+If you need multiline documentation, you need need individual \#. OR, you can just surround your comment in 3x"
+\begin{minted}[breaklines=true,frame=single]{python}
+"""
+This is a block documentation
+
+Anything in here is a comment
+"""
+
+"""Another valid block doc: don't have to be multi-line"""
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Reservations}
+With that said, the convention is to keep block documentation only for function, class, or module docs. These are called \textit{docstrings}
+\begin{minted}[breaklines=true,frame=single]{python}
+def your_function(a, b):
+  """
+  This functoin returns if a > b
+
+  Args:
+    a: number
+    b: number
+  """
+  return a > b
+\end{minted}
+\end{frame}
+
+\begin{frame}{Formats}
+There are multiple docstring format conventions if you want to follow them. They tend to include all of a function's info like arguments, return type, exceptions, etc. They can also be used to automatically generate a documentation webpage.
+
+See \url{https://stackoverflow.com/questions/3898572/what-are-the-most-common-python-docstring-formats} for the different formats.
+
+PyCharm can handle all of them, and will auto-fill a docstring for a function when you make one.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Getting docstrings}
+You can also have Python return a docstring of a function or class by calling \verb|__doc__|:
+\begin{minted}[breaklines=true,frame=single]{python}
+import random
+print(random.randint.__doc__)
+\end{minted}
+\end{frame}
+
+\section{Type Hinting}
+\begin{frame}[containsverbatim]{Hinting}
+If you have a function as follows, let's say it's expecting a certain input type
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function(money):
+  if money < 50:
+    print("You broke")
+  else:
+    print("You not broke")
+\end{minted}
+And this will fail if the type isn't a float or integer. How do you convey it?
+\end{frame}
+
+\begin{frame}[containsverbatim]{Docs}
+You could have the block documentation state so
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function(money):
+  """
+  Really cool function
+
+  Args:
+    money (int): This is an integer!
+  """
+  if money < 50:
+    print("You broke")
+  else:
+    print("You not broke")
+\end{minted}
+But what if there was a BETTER way, one in which the IDE can also understand and do static checking to that who uses this function?
+\end{frame}
+
+\begin{frame}[containsverbatim]{Hinting}
+Introducing type hinting! Now with this one small trick (colon), you can have the user, IDE, and any static checker know what type your function is expecting!
+
+After a variable, you type colon with the type class it expects
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function(money: int):
+  if money < 50:
+    print("You broke")
+  else:
+    print("You not broke")
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Hinting 2}
+Also works with optional variables, before the equate sign.
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function2(money: int, areyoucool: bool = False):
+  if areyoucool:
+    print("You're cool anyways, who needs money!")
+    return
+  if money < 50:
+    print("You broke")
+  else:
+    print("You not broke")
+\end{minted}
+\end{frame}
+
+\section{Global}
+
+\begin{frame}[containsverbatim]{Variable Scope}
+  Variables have a "scope" to them, i.e what part of code they encompass.
+
+  For example, a variable declared in a function has it's scope withing the function, and cannot be accessed externally:
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function3():
+    money = 5
+
+really_cool_function3()
+print(money)    # This will fail
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Variable Scope}
+  But a function can access outside scope variables if it is not defined
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function4():
+    print(cash)
+
+cash = 50
+really_cool_function4()
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Variable Scope}
+  If function uses a local variable, even if later, then the global variable is not used:
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function4():
+    print(cash) # this will fail
+    cash = 10
+
+cash = 50
+really_cool_function4()
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Global}
+  Unless you have a \verb|global| keyword to have the scope of the variable be outside of the function. This will also allow functions to change global variables
+\begin{minted}[breaklines=true,frame=single]{python}
+def really_cool_function4():
+    global cash
+    print(cash)
+    cash = 10
+    print(cash)
+
+cash = 50
+print(cash)
+really_cool_function4()
+print(cash)
+\end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Guidance}
+  My advice: \textit{AVOID globals if possible}.
+
+  They can lead to unexpected bugs, and aren't a good design practice. For larger/robust applications, each function should have a defined input and output. If some variables needs to be kept in a state, use classes.
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end
+\end{frame}
+
+\end{document}
