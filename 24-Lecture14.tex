@@ -1,0 +1,189 @@
+% This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+\input{common.tex}
+
+\usepackage{media9}
+\usepackage{multicol}
+
+\title{Lecture \#14: GUI: Tkinter}
+\date{\today}
+\author{Presented by Jamal Bouajjaj}
+\institute{For University of New Haven's Fall 2023 CSCIxx51 Course}
+
+% From https://tex.stackexchange.com/questions/66519/make-each-frame-not-slide-appear-in-the-pdf-bookmarks-with-beamer
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=3]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Interface}
+There are 3 "interface types" that are possible with a modern computer
+\begin{itemize}
+  \item CLI: Command-Line Interface. Interface with the application thru a command line sending text to it
+  \item TUI: Terminal User Interface. Interface with the application thru a terminal, but interactivally
+  \item GUI: Graphical User Interface. Interface with the application with graphics
+\end{itemize}
+So far, we have only done CLI. We will be going over GUI, but not TUI (if you're intrested, look into \textit{curses}
+\end{frame}
+
+
+\begin{frame}{Widget Toolkit}
+A \textit{Widget Toolkit} or \textit{GUI Framework} is a library (or multiple) that allows you to make a GUI application. A lot of them are OS-independent.
+
+There are many toolkits for Python, including:
+\begin{itemize}
+  \item Tkinter (what we will be using)
+  \item PyQT/PySide
+  \item wxPython
+  \item Kivy
+\end{itemize}
+
+\footnote{\url{https://en.wikipedia.org/wiki/Widget_toolkit}}
+\end{frame}
+
+\section{tkinter}
+
+\begin{frame}{tkinter}
+\textit{tkinter} is the defacto-standard toolkit for making simple GUI in Python. So much in fact that Python ships with it as a standard library.
+
+\textit{tkinter} is technically a Python wrapper for \textit{tk}, a GUI framework that is ran under the \textit{tcl} programming language.
+
+There is also \textit{tkinter.ttk}, which just has themed widgets, and is also part of the \textit{tk} library.
+\end{frame}
+
+\begin{frame}{Widgets}
+A widget is some GUI element that can be used as an element of interaction. Think like buttons, scroll-bars, labels, etc.
+Tk has many widgets, all in the official docs. Here are some common/popular ones
+\begin{multicols}{2}
+\begin{itemize}
+  \item label
+  \item button
+  \item listbox
+  \item checkbutton
+  \item text
+  \item radiobox
+  \item canvas
+\end{itemize}
+AND MORE!
+\end{multicols}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Invoking}
+To get started, we need to make a top-level (a window) that is the root, the top-most level. Then we can run it
+    \begin{minted}[breaklines=true,frame=single]{python}
+import tkinter as tk
+# The top-level window
+root = tk.Tk()
+# This runs TK. This will HANG FOREVER until the GUI is closed
+root.mainloop()
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Widget}
+Let's add a widget
+    \begin{minted}[breaklines=true,frame=single,fontsize=\small]{python}
+import tkinter as tk
+# The top-level window
+root = tk.Tk()
+
+label = tk.Label(root, text="Welcome World!")
+label.pack()   # We place the label (see next slide)
+
+# This runs TK. This will HANG FOREVER until the GUI is closed
+root.mainloop()
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Placement}
+How do we place widgets? Tkinter offers 3 "styles.
+\begin{itemize}
+  \item pack(): Places widgets on top of one another, or side to side.
+  \item grid(): Places the widget in a grid-like fashion
+  \item place(): Places the widget in direct x-y coordinates in the window
+\end{itemize}
+You must stick to one placement style per frame/top-level.
+\end{frame}
+
+\begin{frame}[containsverbatim]{Binding}
+Each widget can have events binded to it, such as a key press, button press, or other events. Each binding call need to take one argument, which is the event
+    \begin{minted}[breaklines=true,frame=single,fontsize=\small]{python}
+    root = tk.Tk()
+
+    text = tk.Label(root, text="A thing!")
+    text.pack()
+
+    text.bind("<Enter>", lambda x: print("Entered"))
+    text.bind("<Leave>", lambda x: print("Left"))
+
+    root.bind("q", lambda x: root.destroy())
+
+    # run
+    root.mainloop()
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Messagebox}
+There are several built-in message box, such as
+  \begin{minted}[breaklines=true,frame=single,fontsize=\small]{python}
+from tkinter import messagebox
+# The top-level window
+messagebox.showinfo("TITLE", "MESSAGE")
+messagebox.showwarning("TITLE", "MESSAGE")
+messagebox.showerror("TITLE", "MESSAGE")
+messagebox.askquestion("TITLE", "MESSAGE")
+messagebox.askokcancel("TITLE", "MESSAGE")
+messagebox.askretrycancel("TITLE", "MESSAGE")
+messagebox.askyesno("TITLE", "MESSAGE")
+messagebox.askyesnocancel("TITLE", "MESSAGE")
+  \end{minted}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Dialogs}
+There are several built-in dialogs into tkinter, such as
+  \begin{minted}[breaklines=true,frame=single,fontsize=\small]{python}
+from tkinter import simpledialog
+# The top-level window
+simpledialog.askfloat("TITLE", "MESSAGE")
+simpledialog.askinteger("TITLE", "MESSAGE")
+simpledialog.askstring("TITLE", "MESSAGE")
+  \end{minted}
+  Also file dialogs
+  \begin{minted}[breaklines=true,frame=single,fontsize=\small]{python}
+from tkinter import filedialog
+# Actually return a FileIO
+filedialog.askopenfile()
+filedialog.asksaveasfile()
+# Only return file name
+filedialog.askopenfilename()
+filedialog.asksaveasfilename()
+# Ask for directory
+filedialog.askdirectory()
+  \end{minted}
+\end{frame}
+
+\begin{frame}{References}
+\begin{itemize}
+  \item \url{https://www.tcl.tk/man/tcl8.6/TkCmd/contents.html}
+  \item \url{https://docs.python.org/3/library/tk.html}
+  \item \url{https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/index.html}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[standout]{End}
+  The end. \pause
+
+  Wait, don't we need to know more?\pause
+
+  Well yes, but I will be doing that as an in-class demo/live coding
+\end{frame}
+
+\end{document}
